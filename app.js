@@ -7,6 +7,7 @@ $("document").ready(function () {
   const apiKey = "OPENWEATHER_API_KEY_REMOVED";
   let queryURL;
   let citiesSearchedArray = [];
+  let citiesSearchedArrayData = [];
 
   /* ************************* Function Declarations ************************* */
   /* --------------- Global --------------- */
@@ -29,35 +30,47 @@ $("document").ready(function () {
     $(".listSearchedCities").empty();
 
     // Load searched cities from local storage
-    citiesSearchedArray = localStorage.getItem("searchedCities");
-    citiesSearchedArray = JSON.parse(citiesSearchedArray);
-    console.log("citiesSearchedArray: ", citiesSearchedArray);
+    if (localStorage.getItem("searchedCities")) {
+      citiesSearchedArray = localStorage.getItem("searchedCities");
+      citiesSearchedArray = JSON.parse(citiesSearchedArray);
+      citiesSearchedArrayData = localStorage.getItem("searchedCitiesData");
+      citiesSearchedArrayData = JSON.parse(citiesSearchedArrayData);
+      console.log("citiesSearchedArray: ", citiesSearchedArray);
+      console.log("citiesSearchedArrayData: ", citiesSearchedArrayData);
 
-    // Display searched cities list
-    citiesSearchedArray.forEach(function (searchedCity) {
-      var newSearchedCity = $("<a>");
-      newSearchedCity.attr("href", "#");
-      newSearchedCity.attr("searchedCity", searchedCity);
-      newSearchedCity.attr(
-        "class",
-        "list-group-item list-group-item-action list-group-item-light listItemSearchedCity"
-      );
-      newSearchedCity.text(searchedCity);
-      console.log(newSearchedCity);
-      $(".listSearchedCities").prepend(newSearchedCity);
-    });
+      // Display searched cities list
+      if (citiesSearchedArray) {
+        citiesSearchedArray.forEach(function (searchedCity) {
+          var newSearchedCity = $("<a>");
+          newSearchedCity.attr("href", "#");
+          newSearchedCity.attr("searchedCity", searchedCity);
+          newSearchedCity.attr(
+            "class",
+            "list-group-item list-group-item-action list-group-item-light listItemSearchedCity"
+          );
+          newSearchedCity.text(searchedCity);
+          $(".listSearchedCities").prepend(newSearchedCity);
+        });
+      }
+    } else {
+      citiesSearchedArray = [];
+      citiesSearchedArrayData = [];
+    }
   }
 
-  function displayCity(res) {
+  function displayCityInSearchedCities(res) {
     // Empty the city search input
     $("#cityInput").val("");
 
-    // Add city to the searched cities list array
+    // Add city to the searched cities list array and data
     citiesSearchedArray.push(city);
+    citiesSearchedArrayData.push(res);
 
-    // Save searched cities array to local storage
+    // Save searched cities array and data to local storage
     var citiesSearchedArrayString = JSON.stringify(citiesSearchedArray);
     localStorage.setItem("searchedCities", citiesSearchedArrayString);
+    var citiesSearchedArrayDataString = JSON.stringify(citiesSearchedArrayData);
+    localStorage.setItem("searchedCitiesData", citiesSearchedArrayDataString);
 
     // Append new city element to the searched list
     var newSearchedCity = $("<a>");
@@ -69,6 +82,8 @@ $("document").ready(function () {
     newSearchedCity.text(city);
     console.log(newSearchedCity);
     $(".listSearchedCities").prepend(newSearchedCity);
+    $(".listSearchedCities").hide();
+    $(".listSearchedCities").fadeIn(1000);
   }
 
   /* --------------- City Current --------------- */
@@ -82,6 +97,6 @@ $("document").ready(function () {
     event.preventDefault();
     city = $("#cityInput").val();
     queryURL = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`;
-    runAjax(queryURL, displayCity);
+    runAjax(queryURL, displayCityInSearchedCities);
   });
 });
