@@ -39,33 +39,18 @@
                   <input
                     type="search"
                     class="form-control"
-                    id="cityToSearch"
+                    id="cityInput"
                     placeholder="Search for a city"
                   />
                 </div>
-                <button type="submit" class="btn btn-success mb-2">
+                <button type="submit" class="btn btn-success mb-2" id="searchBtn">
                   <i class="fas fa-search-location"></i>
                 </button>
               </form>
               <!-- /Search Form -->
 
               <!-- Searched Cities List -->
-              <div class="list-group">
-                <a
-                  href="#"
-                  class="list-group-item list-group-item-action list-group-item-success"
-                  >City 1</a
-                >
-                <a
-                  href="#"
-                  class="list-group-item list-group-item-action list-group-item-light"
-                  >City 2</a
-                >
-                <a
-                  href="#"
-                  class="list-group-item list-group-item-action list-group-item-light"
-                  >City 3</a
-                >
+              <div class="list-group listSearchedCities">
               <!-- /Searched Cities List -->
             </div>
           </div>
@@ -162,11 +147,7 @@
     <!-- /Container -->
 
     <!-- jQuery -->
-    <script
-      src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-      integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-      crossorigin="anonymous"
-    ></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
     <!-- Popper.js -->
     <script
@@ -187,5 +168,8 @@
       src="https://kit.fontawesome.com/e211982880.js"
       crossorigin="anonymous"
     ></script>
+
+    <!-- Main js -->
+    <script src="./app.js"></script>
   </body>
 </html>
