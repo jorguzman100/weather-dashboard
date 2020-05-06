@@ -1,0 +1,41 @@
+/* --------------- Global --------------- */
+header {
+  padding: 20px;
+}
+
+h1,
+h5 {
+  text-align: center !important;
+  margin-left: 0px !important;
+}
+
+section {
+  padding: 20px 5px !important;
+}
+
+.subtitle {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.card-header {
+  padding: 5px;
+  text-align: center;
+}
+
+/* --------------- Search Cities --------------- */
+.form-inline .form-group {
+  margin-left: 0px !important;
+}
+
+.list-group {
+  width: 50%;
+}
+
+/* --------------- City Current --------------- */
+
+/* --------------- City Forcast --------------- */
+#forcastDays .col {
+  padding-left: 0px;
+  padding-right: 0px;
+}
