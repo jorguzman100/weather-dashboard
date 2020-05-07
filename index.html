@@ -73,7 +73,7 @@
                       <p class="card-text temp">Temp</p>
                       <p class="card-text humid">Humid</p>
                       <p class="card-text wind">Wind Speed</p>
-                      <p class="card-text uv">UV Index</p>
+                      <p class="card-text"><span class="uv">Index</span>  <span class="flag"></span></p>
                     </div>
                   </div>
             </div>
@@ -88,12 +88,13 @@
               <h5>Forecast</h5>
             </div>
             <div class="card-body">
-              <div class="row row-cols-5" id="forcastDays">
+              <div class="row row-cols-5 forecast">
                 <div class="col">
                   <div class="card mb-3" style="max-width: 18rem;">
                     <div class="card-header date">Date 1</div>
                     <div class="card-body">
-                      <p class="card-text" class="icon">Icon</p>
+                      <img src="" class="card-img-top icon" alt="Weather icon" style="display: none;">
+                      <p class="card-text" class="weather">Weather</p>
                       <p class="card-text" class="temp">Temp</p>
                       <p class="card-text" class="humid">Humid</p>
                     </div>
@@ -103,7 +104,8 @@
                   <div class="card mb-3" style="max-width: 18rem;">
                     <div class="card-header date">Date 2</div>
                     <div class="card-body">
-                      <p class="card-text" class="icon">Icon</p>
+                      <img src="" class="card-img-top icon" alt="Weather icon" style="display: none;">
+                      <p class="card-text" class="weather">Weather</p>
                       <p class="card-text" class="temp">Temp</p>
                       <p class="card-text" class="humid">Humid</p>
                     </div>
@@ -113,7 +115,8 @@
                   <div class="card mb-3" style="max-width: 18rem;">
                     <div class="card-header date">Date 3</div>
                     <div class="card-body">
-                      <p class="card-text" class="icon">Icon</p>
+                      <img src="" class="card-img-top icon" alt="Weather icon" style="display: none;">
+                      <p class="card-text" class="weather">Weather</p>
                       <p class="card-text" class="temp">Temp</p>
                       <p class="card-text" class="humid">Humid</p>
                     </div>
@@ -123,7 +126,8 @@
                   <div class="card mb-3" style="max-width: 18rem;">
                     <div class="card-header date">Date 4</div>
                     <div class="card-body">
-                      <p class="card-text" class="icon">Icon</p>
+                      <img src="" class="card-img-top icon" alt="Weather icon" style="display: none;">
+                      <p class="card-text" class="weather">Weather</p>
                       <p class="card-text" class="temp">Temp</p>
                       <p class="card-text" class="humid">Humid</p>
                     </div>
@@ -133,7 +137,8 @@
                   <div class="card mb-3" style="max-width: 18rem;">
                     <div class="card-header date">Date 5</div>
                     <div class="card-body">
-                      <p class="card-text" class="icon">Icon</p>
+                      <img src="" class="card-img-top icon" alt="Weather icon" style="display: none;">
+                      <p class="card-text" class="weather">Weather</p>
                       <p class="card-text" class="temp">Temp</p>
                       <p class="card-text" class="humid">Humid</p>
                     </div>
@@ -172,7 +177,7 @@
     ></script>
 
     <!-- Moments.js -->
-    <script src="https://momentjs.com/downloads/moment-with-locales.min.js"></script>
+  <script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
 
     <!-- Main js -->
     <script src="./app.js"></script>
