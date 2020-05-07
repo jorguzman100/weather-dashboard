@@ -58,20 +58,21 @@
         <!-- /Search Cities -->
 
         <!-- City Current -->
-        <section class="col">
+        <section class="col currentData">
           <div class="card">
             <div class="card-header subtitle">
               <h5>Current Weather</h5>
             </div>
             <div class="card-body">
               <div class="card mb-3" style="max-width: 18rem;">
-                    <div class="card-header">Current Date</div>
+                    <div class="card-header date">Current Date</div>
                     <div class="card-body">
-                      <p class="card-text" class="icon">Icon</p>
-                      <p class="card-text" class="temp">Temp</p>
-                      <p class="card-text" class="humid">Humid</p>
-                      <p class="card-text" class="wind">Wind Speed</p>
-                      <p class="card-text" class="uv">UV Index</p>
+                      <img src="" class="card-img-top icon" alt="Weather icon" style="display: none;">
+                      <p class="card-text weather">Weather</p>
+                      <p class="card-text temp">Temp</p>
+                      <p class="card-text humid">Humid</p>
+                      <p class="card-text wind">Wind Speed</p>
+                      <p class="card-text uv">UV Index</p>
                     </div>
                   </div>
             </div>
@@ -89,7 +90,7 @@
               <div class="row row-cols-5" id="forcastDays">
                 <div class="col">
                   <div class="card mb-3" style="max-width: 18rem;">
-                    <div class="card-header">Date 1</div>
+                    <div class="card-header date">Date 1</div>
                     <div class="card-body">
                       <p class="card-text" class="icon">Icon</p>
                       <p class="card-text" class="temp">Temp</p>
@@ -99,7 +100,7 @@
                 </div>
                 <div class="col">
                   <div class="card mb-3" style="max-width: 18rem;">
-                    <div class="card-header">Date 2</div>
+                    <div class="card-header date">Date 2</div>
                     <div class="card-body">
                       <p class="card-text" class="icon">Icon</p>
                       <p class="card-text" class="temp">Temp</p>
@@ -109,7 +110,7 @@
                 </div>
                 <div class="col">
                   <div class="card mb-3" style="max-width: 18rem;">
-                    <div class="card-header">Date 3</div>
+                    <div class="card-header date">Date 3</div>
                     <div class="card-body">
                       <p class="card-text" class="icon">Icon</p>
                       <p class="card-text" class="temp">Temp</p>
@@ -119,7 +120,7 @@
                 </div>
                 <div class="col">
                   <div class="card mb-3" style="max-width: 18rem;">
-                    <div class="card-header">Date 4</div>
+                    <div class="card-header date">Date 4</div>
                     <div class="card-body">
                       <p class="card-text" class="icon">Icon</p>
                       <p class="card-text" class="temp">Temp</p>
@@ -129,7 +130,7 @@
                 </div>
                 <div class="col">
                   <div class="card mb-3" style="max-width: 18rem;">
-                    <div class="card-header">Date 5</div>
+                    <div class="card-header date">Date 5</div>
                     <div class="card-body">
                       <p class="card-text" class="icon">Icon</p>
                       <p class="card-text" class="temp">Temp</p>
@@ -168,6 +169,9 @@
       src="https://kit.fontawesome.com/e211982880.js"
       crossorigin="anonymous"
     ></script>
+
+    <!-- Moments.js -->
+    <script src="https://momentjs.com/downloads/moment-with-locales.min.js"></script>
 
     <!-- Main js -->
     <script src="./app.js"></script>

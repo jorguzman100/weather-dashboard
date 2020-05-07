@@ -3,6 +3,10 @@ header {
   padding: 20px;
 }
 
+h5 {
+  margin-bottom: 0px;
+}
+
 h1,
 h5 {
   text-align: center !important;
@@ -33,6 +37,10 @@ section {
 }
 
 /* --------------- City Current --------------- */
+
+.weather {
+  text-transform: capitalize;
+}
 
 /* --------------- City Forcast --------------- */
 #forcastDays .col {
