@@ -28,6 +28,10 @@ section {
 }
 
 /* --------------- Search Cities --------------- */
+input {
+  text-transform: capitalize;
+}
+
 .form-inline .form-group {
   margin-left: 0px !important;
 }

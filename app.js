@@ -134,12 +134,13 @@ $("document").ready(function () {
     date = moment.utc(utc_date);
     date = date.format("MMMM Do YYYY");
     var icon = `http://openweathermap.org/img/wn/${cityData.weather[0].icon}@2x.png`;
-    console.log("Icon: ", icon);
 
     temp = (cityData.main.temp - 273.15).toFixed(1);
-    $(".currentData h5").text(`Current Weather - ${city}`);
+
+    $(".currentData .city").text(city);
     $(".currentData .date").text(date);
     $(".currentData .icon").attr("src", icon);
+    $(".currentData .icon").show();
     $(".currentData .weather").text(
       "Weather: " + cityData.weather[0].description
     );
