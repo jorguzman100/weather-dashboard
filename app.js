@@ -295,13 +295,32 @@ $("document").ready(function () {
   function cleanLocalStorage() {
     var storageKeysArray = [];
     console.log(
-      "***************** localStorage ****************** ",
+      "***************** cleanLocalStorage() ****************** ",
       localStorage
     );
+
     for (i = 0; i < localStorage.length; i++) {
       storageKeysArray.push(localStorage.key(i));
     }
+
+    storageKeysArray.forEach(function (key) {
+      key = key.toString();
+      if (key != "searchedCitiesObjects") {
+        console.log("localStorage.key: ", key);
+        console.log("get Item: ", localStorage.getItem(key));
+        localStorage.removeItem(key);
+      }
+    });
+
+    /* for (var attr in localStorage) {
+      if (attr != "searchedCitiesObjects") {
+        localStorage.removeItem(attr);
+      }
+    } */
+    //localStorage.clear();
+
     console.log("storageKeysArray: ", storageKeysArray);
+    console.log("Local Storage: ", localStorage);
   }
   cleanLocalStorage();
 
@@ -310,12 +329,12 @@ $("document").ready(function () {
 
   $("#searchBtn").on("click", function (event) {
     event.preventDefault();
+
     city = $("#cityInput").val();
     ajaxFlag = 0;
 
     // Call current weather data for one location (to get latitude and longitude)
     queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`;
-    console.log("******************* queryURL ********************".queryURL);
     runAjax(queryURL, getCurrentAndForcastData);
   });
 
