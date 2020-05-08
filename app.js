@@ -71,7 +71,7 @@ $("document").ready(function () {
 
   function displayCityInSearchedCities(res) {
     console.log("displayCityInSearchedCities()");
-    loadSearchedCities();
+    //loadSearchedCities();
     // Empty the city search input
     $("#cityInput").val("");
 
@@ -98,7 +98,7 @@ $("document").ready(function () {
     newSearchedCity.attr("searchedCity", city);
     newSearchedCity.attr(
       "class",
-      "list-group-item list-group-item-action newCity listItemSearchedCity"
+      "list-group-item list-group-item-action list-group-item-light listItemSearchedCity"
     );
     newSearchedCity.text(city);
     $(".listSearchedCities").prepend(newSearchedCity);
@@ -260,7 +260,11 @@ $("document").ready(function () {
   /* --------------- Windy Map API --------------- */
   let options = {};
   function windyMap(city, cityData) {
-    console.log("windyMap()");
+    $("#windy").empty();
+    $("#windy").removeAttr("class");
+    console.log(
+      "************************* windyMap() *************************"
+    );
     options = {
       // Required: API key
       key: "WINDY_API_KEY_REMOVED",
@@ -292,44 +296,11 @@ $("document").ready(function () {
       .openOn(map);
   }
 
-  function cleanLocalStorage() {
-    var storageKeysArray = [];
-    console.log(
-      "***************** cleanLocalStorage() ****************** ",
-      localStorage
-    );
-
-    for (i = 0; i < localStorage.length; i++) {
-      storageKeysArray.push(localStorage.key(i));
-    }
-
-    storageKeysArray.forEach(function (key) {
-      key = key.toString();
-      if (key != "searchedCitiesObjects") {
-        console.log("localStorage.key: ", key);
-        console.log("get Item: ", localStorage.getItem(key));
-        localStorage.removeItem(key);
-      }
-    });
-
-    /* for (var attr in localStorage) {
-      if (attr != "searchedCitiesObjects") {
-        localStorage.removeItem(attr);
-      }
-    } */
-    //localStorage.clear();
-
-    console.log("storageKeysArray: ", storageKeysArray);
-    console.log("Local Storage: ", localStorage);
-  }
-  cleanLocalStorage();
-
   /* ************************* Event Listeners ************************* */
   init();
 
   $("#searchBtn").on("click", function (event) {
     event.preventDefault();
-
     city = $("#cityInput").val();
     ajaxFlag = 0;
 
@@ -339,7 +310,7 @@ $("document").ready(function () {
   });
 
   $(".listSearchedCities").on("click", function (event) {
-    loadSearchedCities();
+    // loadSearchedCities();
     citiesSearchedObjectsArray.forEach(function (object) {
       if (object.city === $(event.target).attr("searchedcity")) {
         displayCityInCurrentWeather(object.city, object.data);
