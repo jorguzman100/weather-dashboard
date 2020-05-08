@@ -315,6 +315,7 @@ $("document").ready(function () {
 
     // Call current weather data for one location (to get latitude and longitude)
     queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`;
+    console.log("******************* queryURL ********************".queryURL);
     runAjax(queryURL, getCurrentAndForcastData);
   });
 
