@@ -166,6 +166,7 @@ $("document").ready(function () {
     }
     $(".currentData").hide();
     $(".currentData").fadeIn(1000);
+    windyMap(city, cityData);
     displayForcastDay(cityData);
   }
 
@@ -191,9 +192,7 @@ $("document").ready(function () {
         $(".forecast .date").eq(index).text(date);
         $(".forecast .icon").eq(index).attr("src", icon);
         $(".forecast .icon").eq(index).show();
-        $(".forecast .weather")
-          .eq(index)
-          .text("W: " + weather);
+        $(".forecast .weather").eq(index).text(weather);
         $(".forecast .temp")
           .eq(index)
           .text("T: " + temp);
@@ -202,7 +201,7 @@ $("document").ready(function () {
           .text("H: " + humid);
         $(".forecast .wind")
           .eq(index)
-          .text("W. S.: " + windSpeed);
+          .text("WS: " + windSpeed);
 
         if (uv >= 0 && uv <= 2) {
           $(".forecast .uv").eq(index).text("UV: ", uv);
@@ -251,10 +250,46 @@ $("document").ready(function () {
 
       // Current and forecasts weather data
       queryURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${res.coord.lat}&lon=${res.coord.lon}&exclude=hourly&appid=${apiKey}`;
+      console.log("queryURL: ", queryURL);
       runAjax(queryURL, getCurrentAndForcastData);
     } else {
       displayCityInSearchedCities(res);
     }
+  }
+
+  /* --------------- Windy Map API --------------- */
+  let options = {};
+  function windyMap(city, cityData) {
+    console.log("windyMap()");
+    options = {
+      // Required: API key
+      key: "WINDY_API_KEY_REMOVED",
+
+      // Put additional console output
+      verbose: true,
+
+      // Optional: Initial state of the map
+      city: city,
+      lat: cityData.lat,
+      lon: cityData.lon,
+      zoom: 11,
+    };
+    windyInit(options, windyCallBack);
+  }
+
+  function windyCallBack(windyAPI) {
+    console.log("windyCallBack()");
+    console.log("windyAPI: ", windyAPI);
+    // windyAPI is ready, and contain 'map', 'store',
+    // 'picker' and other usefull stuff
+
+    const { map } = windyAPI;
+    // .map is instance of Leaflet map
+
+    L.popup()
+      .setLatLng([options.lat, options.lon])
+      .setContent(options.city)
+      .openOn(map);
   }
 
   /* ************************* Event Listeners ************************* */
