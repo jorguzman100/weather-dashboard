@@ -292,6 +292,19 @@ $("document").ready(function () {
       .openOn(map);
   }
 
+  function cleanLocalStorage() {
+    var storageKeysArray = [];
+    console.log(
+      "***************** localStorage ****************** ",
+      localStorage
+    );
+    for (i = 0; i < localStorage.length; i++) {
+      storageKeysArray.push(localStorage.key(i));
+    }
+    console.log("storageKeysArray: ", storageKeysArray);
+  }
+  cleanLocalStorage();
+
   /* ************************* Event Listeners ************************* */
   init();
 
@@ -301,7 +314,7 @@ $("document").ready(function () {
     ajaxFlag = 0;
 
     // Call current weather data for one location (to get latitude and longitude)
-    queryURL = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`;
+    queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`;
     runAjax(queryURL, getCurrentAndForcastData);
   });
 
