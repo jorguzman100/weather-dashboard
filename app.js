@@ -119,7 +119,7 @@ $("document").ready(function () {
     date = moment.utc(utc_date);
     date = date.format("MMMM Do YYYY");
 
-    var icon = `http://openweathermap.org/img/wn/${cityData.current.weather[0].icon}@2x.png`;
+    var icon = `https://openweathermap.org/img/wn/${cityData.current.weather[0].icon}@2x.png`;
     temp = (cityData.current.temp - 273.15).toFixed(1);
     var uv = cityData.current.uvi;
 
@@ -181,7 +181,7 @@ $("document").ready(function () {
         var utc_date = date.toUTCString();
         date = moment.utc(utc_date);
         date = date.format("MMMM Do YYYY");
-        var icon = `http://openweathermap.org/img/wn/${dayData.weather[0].icon}@2x.png`;
+        var icon = `https://openweathermap.org/img/wn/${dayData.weather[0].icon}@2x.png`;
         var weather = dayData.weather[0].description;
         var temp = (dayData.temp.day - 273.15).toFixed(1) + "ºC";
         var humid = dayData.humidity + "%";
