@@ -17,14 +17,24 @@ section {
   padding: 20px 5px !important;
 }
 
+button {
+  background: #f77625 !important;
+  color: #e6e4e3 !important;
+}
+
 .subtitle {
-  background-color: #d4edda;
-  color: #155724;
+  background-color: #f77625;
+  color: #e6e4e3;
 }
 
 .card-header {
   padding: 5px;
   text-align: center;
+}
+
+.newCity {
+  background-color: #faac84;
+  color: #e6e4e3;
 }
 
 /* --------------- Search Cities --------------- */
@@ -47,7 +57,8 @@ input {
 }
 
 /* --------------- City Forcast --------------- */
-#forcastDays .col {
-  padding-left: 0px;
-  padding-right: 0px;
+.forecast .col {
+  padding-left: 5px !important;
+  padding-right: 5px !important;
+  font-size: 0.5rem;
 }

@@ -27,8 +27,6 @@ $("document").ready(function () {
       if (thenFunction) {
         thenFunction(response);
       } else {
-        /* console.log("No thenFunction");
-        console.log("2nd Response: ", response); */
         return response;
       }
     });
@@ -42,12 +40,10 @@ $("document").ready(function () {
 
     // Load searched cities from local storage
     if (localStorage.getItem("searchedCitiesObjects")) {
-      console.log("YES searchedCitiesObjects");
       citiesSearchedObjectsArray = localStorage.getItem(
         "searchedCitiesObjects"
       );
       citiesSearchedObjectsArray = JSON.parse(citiesSearchedObjectsArray);
-      console.log("citiesSearchedObjectsArray: ", citiesSearchedObjectsArray);
       // Display searched cities list
       if (citiesSearchedObjectsArray) {
         citiesSearchedObjectsArray.forEach(function (object) {
@@ -67,9 +63,10 @@ $("document").ready(function () {
         );
       }
     } else {
-      console.log("No searchedCitiesObjects");
       citiesSearchedObjectsArray = [];
     }
+    $(".listSearchedCities").hide();
+    $(".listSearchedCities").fadeIn(1000);
   }
 
   function displayCityInSearchedCities(res) {
@@ -94,10 +91,6 @@ $("document").ready(function () {
       "searchedCitiesObjects",
       citiesSearchedObjectsArrayString
     );
-    console.log(
-      "citiesSearchedObjectsArrayString: ",
-      citiesSearchedObjectsArrayString
-    );
 
     // Append new city element to the searched list
     var newSearchedCity = $("<a>");
@@ -105,7 +98,7 @@ $("document").ready(function () {
     newSearchedCity.attr("searchedCity", city);
     newSearchedCity.attr(
       "class",
-      "list-group-item list-group-item-action list-group-item-success listItemSearchedCity"
+      "list-group-item list-group-item-action newCity listItemSearchedCity"
     );
     newSearchedCity.text(city);
     $(".listSearchedCities").prepend(newSearchedCity);
@@ -125,11 +118,11 @@ $("document").ready(function () {
     var utc_date = date.toUTCString();
     date = moment.utc(utc_date);
     date = date.format("MMMM Do YYYY");
-    console.log("date: ", date);
+
     var icon = `http://openweathermap.org/img/wn/${cityData.current.weather[0].icon}@2x.png`;
     temp = (cityData.current.temp - 273.15).toFixed(1);
     var uv = cityData.current.uvi;
-    console.log("UV INDEX: ", uv);
+
     $(".currentData .city").text(city);
     $(".currentData .date").text(date);
     $(".currentData .icon").attr("src", icon);
@@ -151,7 +144,6 @@ $("document").ready(function () {
       $(".currentData .flag").css("background", "#d4edda");
       $(".currentData .flag").css("color", "gray");
     } else if (uv >= 3 && uv <= 5) {
-      console.log("uv >= 3 && uv <= 5");
       $(".currentData .uv").text("UV Index: " + uv);
       $(".currentData .flag").text(" Moderate ");
       $(".currentData .flag").css("background", "#fff3cd");
@@ -172,31 +164,95 @@ $("document").ready(function () {
       $(".currentData .flag").css("background", "#721c24");
       $(".currentData .flag").css("color", "white");
     }
-
-    /* displayForcast(
-      false,
-      cityData.name,
-      cityData.coord.lat,
-      cityData.coord.lon
-    ); */
+    $(".currentData").hide();
+    $(".currentData").fadeIn(1000);
+    displayForcastDay(cityData);
   }
 
   /* --------------- City Forcast --------------- */
+  function displayForcastDay(cityData) {
+    console.log("displayForcastDay()");
+    cityData = cityData.daily;
+    cityData.forEach(function (dayData, index) {
+      if (index <= 4) {
+        // Handling The Data
+        date = new Date(dayData.dt * 1000);
+        var utc_date = date.toUTCString();
+        date = moment.utc(utc_date);
+        date = date.format("MMMM Do YYYY");
+        var icon = `http://openweathermap.org/img/wn/${dayData.weather[0].icon}@2x.png`;
+        var weather = dayData.weather[0].description;
+        var temp = (dayData.temp.day - 273.15).toFixed(1) + "ºC";
+        var humid = dayData.humidity + "%";
+        var windSpeed = dayData.wind_speed + " mts/s";
+        var uv = dayData.uvi;
+
+        // Display in the DOM
+        $(".forecast .date").eq(index).text(date);
+        $(".forecast .icon").eq(index).attr("src", icon);
+        $(".forecast .icon").eq(index).show();
+        $(".forecast .weather")
+          .eq(index)
+          .text("W: " + weather);
+        $(".forecast .temp")
+          .eq(index)
+          .text("T: " + temp);
+        $(".forecast .humid")
+          .eq(index)
+          .text("H: " + humid);
+        $(".forecast .wind")
+          .eq(index)
+          .text("W. S.: " + windSpeed);
+
+        if (uv >= 0 && uv <= 2) {
+          $(".forecast .uv").eq(index).text("UV: ", uv);
+          $(".forecast .flag").eq(index).text(" Low ");
+          $(".forecast .flag").eq(index).css("background", "#d4edda");
+          $(".forecast .flag").eq(index).css("color", "gray");
+        } else if (uv >= 3 && uv <= 5) {
+          $(".forecast .uv")
+            .eq(index)
+            .text("UV: " + uv);
+          $(".forecast .flag").eq(index).text(" Moderate ");
+          $(".forecast .flag").eq(index).css("background", "#fff3cd");
+          $(".forecast .flag").eq(index).css("color", "gray");
+        } else if (uv >= 6 && uv <= 7) {
+          $(".forecast .uv")
+            .eq(index)
+            .text("UV: " + uv);
+          $(".forecast .flag").eq(index).text(" High ");
+          $(".forecast .flag").eq(index).css("background", "#fff3cd");
+          $(".forecast .flag").eq(index).css("color", "gray");
+        } else if (uv >= 8 && uv <= 10) {
+          $(".forecast .uv")
+            .eq(index)
+            .text("UV: " + uv);
+          $(".forecast .flag").eq(index).text(" Very High ");
+          $(".forecast .flag").eq(index).css("background", "#f8d7da");
+          $(".forecast .flag").eq(index).css("color", "gray");
+        } else if (uv >= 11) {
+          $(".forecast .uv")
+            .eq(index)
+            .text("UV: " + uv);
+          $(".forecast .flag").eq(index).text(" Extreme ");
+          $(".forecast .flag").eq(index).css("background", "#721c24");
+          $(".forecast .flag").eq(index).css("color", "white");
+        }
+      }
+    });
+    $(".forecast").hide();
+    $(".forecast").fadeIn(1000);
+  }
 
   function getCurrentAndForcastData(res) {
     console.log("getCurrentAndForcastData()");
     if (ajaxFlag === 0) {
-      console.log("1st Response: ", res);
-      console.log("City Name: ", res.name);
-      console.log("Latitude: ", res.coord.lat);
-      console.log("Longitude: ", res.coord.lon);
       ajaxFlag = 1;
+
       // Current and forecasts weather data
-      queryURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${res.coord.lat}&lon=${res.coord.lon}&
-exclude=hourly&appid=${apiKey}`;
+      queryURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${res.coord.lat}&lon=${res.coord.lon}&exclude=hourly&appid=${apiKey}`;
       runAjax(queryURL, getCurrentAndForcastData);
     } else {
-      console.log("2nd Response: ", res);
       displayCityInSearchedCities(res);
     }
   }
