@@ -3,6 +3,10 @@
 
 <head>
   <meta charset="UTF-8" />
+  <meta name="description"
+    content="For any city obtain current and 5 days forcast. Includes: weather description, temperature, humidty, wind speed, UV index and more!" />
+  <meta name="keywords"
+    content="web development, weather, HTML, CSS, JavaScript, Bootstrap, jQuery, Windy.com, OpenWeather" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Bootstrap CSS -->
@@ -21,20 +25,21 @@
   </header>
 
   <!-- Container -->
-  <div class="container">
+  <main class="container">
+    <div class="row row-cols-1 row-cols-lg-2">
 
-  <div class="row row-cols-1 row-cols-lg-2">
-    <!-- Search Cities -->
+      <!-- Search Cities -->
       <section class="col col-lg-3 searchedCitiesSection">
         <div class="card">
           <div class="card-header subtitle">
             <h5>Search Cities</h5>
           </div>
           <div class="card-body">
+
             <!-- Search Form -->
             <form class="form-inline">
               <div class="form-group mb-2">
-                <input type="search" class="form-control" id="cityInput"/>
+                <input type="search" class="form-control" id="cityInput" />
               </div>
               <button type="submit" class="btn mb-2" id="searchBtn">
                 <i class="fas fa-search-location"></i>
@@ -49,24 +54,19 @@
           </div>
       </section>
       <!-- /Search Cities -->
-      
-    <!-- Current Weather -->
+
+      <!-- Current Weather -->
       <section class="col col-lg-9">
         <div class="card">
           <div class="card-header subtitle">
             <h5>Current Weather</h5>
           </div>
           <div class="card-body currentWeather">
-
-
             <div class="card  mb-3 currentData">
               <div class="card-header city">City</div>
               <div class="card-body">
-
-
                 <div class="row row-cols-1 row-cols-sm-2 justify-content-start">
                   <div class="col col-sm-3">
-
                     <img src="" class="card-img-top icon" alt="Weather icon" style="display: none;">
                     <p class="card-text date">Date</p>
                     <p class="card-text weather">Weather</p>
@@ -74,29 +74,25 @@
                     <p class="card-text humid">Humid</p>
                     <p class="card-text wind">Wind Speed</p>
                     <p class="card-text"><span class="uv">Index</span> <span class="flag"></span></p>
+                  </div>
 
-                  </div> <!-- /col-3 -->
-
+                  <!-- The Windy Map -->
                   <div class="col col-sm-9">
                     <div class="card-body">
-                      <!-- The Windy Map -->
                       <div id="windy"></div> <!-- /The Windy Map -->
                     </div>
-                  </div> 
-
-                </div> <!-- /Row -->
-
-              </div> 
-            </div> 
-          </div> 
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
       <!-- /Current Weather -->
-  </div>
+    </div>
 
-
-      <!-- Forcast -->
-      <section class="row forecast">
+    <!-- Forcast -->
+    <section class="row forecast">
       <div class="col col1">
         <div class="card">
           <div class="card-header subtitle">
@@ -172,20 +168,15 @@
             </div>
           </div>
         </div>
-        </div>
-      </section>
-      <!-- /Forcast -->
-    
-  </div>
+      </div>
+    </section>
+    <!-- /Forcast -->
+
+  </main>
   <!-- /Container -->
 
   <!-- jQuery -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
-  <!-- Popper.js -->
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-    crossorigin="anonymous"></script>
 
   <!-- Bootstrap JS -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
