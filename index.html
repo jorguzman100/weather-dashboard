@@ -22,9 +22,10 @@
 
   <!-- Container -->
   <div class="container">
-    <div class="row row-cols-1">
-      <!-- Search Cities -->
-      <section class="col">
+
+  <div class="row row-cols-1 row-cols-lg-2">
+    <!-- Search Cities -->
+      <section class="col col-lg-3 searchedCitiesSection">
         <div class="card">
           <div class="card-header subtitle">
             <h5>Search Cities</h5>
@@ -32,8 +33,8 @@
           <div class="card-body">
             <!-- Search Form -->
             <form class="form-inline">
-              <div class="form-group mx-sm-3 mb-2">
-                <input type="search" class="form-control" id="cityInput" placeholder="Search for a city" />
+              <div class="form-group mb-2">
+                <input type="search" class="form-control" id="cityInput"/>
               </div>
               <button type="submit" class="btn mb-2" id="searchBtn">
                 <i class="fas fa-search-location"></i>
@@ -41,16 +42,16 @@
             </form>
             <!-- /Search Form -->
 
-            <!-- Searched Cities List -->
+            <!-- Cities List -->
             <div class="list-group listSearchedCities">
-              <!-- /Searched Cities List -->
+              <!-- /Cities List -->
             </div>
           </div>
       </section>
       <!-- /Search Cities -->
-
-      <!-- Current Weather -->
-      <section class="col">
+      
+    <!-- Current Weather -->
+      <section class="col col-lg-9">
         <div class="card">
           <div class="card-header subtitle">
             <h5>Current Weather</h5>
@@ -58,13 +59,13 @@
           <div class="card-body currentWeather">
 
 
-
             <div class="card  mb-3 currentData">
               <div class="card-header city">City</div>
               <div class="card-body">
 
-                <div class="row row-cols-2  justify-content-start">
-                  <div class="col-3 col1">
+
+                <div class="row row-cols-1 row-cols-sm-2 justify-content-start">
+                  <div class="col col-sm-3">
 
                     <img src="" class="card-img-top icon" alt="Weather icon" style="display: none;">
                     <p class="card-text date">Date</p>
@@ -74,39 +75,35 @@
                     <p class="card-text wind">Wind Speed</p>
                     <p class="card-text"><span class="uv">Index</span> <span class="flag"></span></p>
 
-                  </div> <!-- /col-3 col1 -->
+                  </div> <!-- /col-3 -->
 
-                  <div class="col-9">
+                  <div class="col col-sm-9">
                     <div class="card-body">
                       <!-- The Windy Map -->
                       <div id="windy"></div> <!-- /The Windy Map -->
                     </div>
-                  </div> <!-- /col-9 -->
+                  </div> 
 
-                </div> <!-- /row row-cols-2  justify-content-star -->
+                </div> <!-- /Row -->
 
-              </div> <!-- /card-body -->
-            </div> <!-- /currentData -->
-
-
-
-
-
-
-
-          </div> <!-- /currentWeather -->
+              </div> 
+            </div> 
+          </div> 
         </div>
       </section>
       <!-- /Current Weather -->
+  </div>
+
 
       <!-- Forcast -->
-      <section class="col">
+      <section class="row forecast">
+      <div class="col col1">
         <div class="card">
           <div class="card-header subtitle">
             <h5>Forecast</h5>
           </div>
           <div class="card-body">
-            <div class="row row-cols-5 forecast">
+            <div class="row row-cols-5 ">
               <div class="col">
                 <div class="card mb-3" style="max-width: 18rem;">
                   <div class="card-header date">Day 1</div>
@@ -175,9 +172,10 @@
             </div>
           </div>
         </div>
+        </div>
       </section>
       <!-- /Forcast -->
-    </div>
+    
   </div>
   <!-- /Container -->
 
