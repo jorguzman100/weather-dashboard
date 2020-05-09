@@ -1,12 +1,8 @@
 $("document").ready(function () {
-  // Celscius = Kelvin - 273.15
-  // Selectors: $('#cityInput')   $('#searchBtn')   $('.listSearchedCities')   $('.currentData')   $('.currentData .date')   $('.date')    $('.weather')    $('.icon')   $('.temp')    $('.humid')
-
   /* ************************* Global Variables ************************* */
   var city;
   const apiKey = "OPENWEATHER_API_KEY_REMOVED";
   let queryURL;
-
   let citiesSearchedObject = {};
   let citiesSearchedObjectsArray = [];
   let ajaxFlag = 0;
@@ -14,12 +10,10 @@ $("document").ready(function () {
   /* ************************* Function Declarations ************************* */
   /* --------------- Global --------------- */
   function init() {
-    console.log("init()");
     loadSearchedCities();
   }
 
   function runAjax(url, thenFunction) {
-    console.log("runAjax()");
     $.ajax({
       url: url,
       method: "GET",
@@ -34,7 +28,6 @@ $("document").ready(function () {
 
   /* --------------- Search Cities --------------- */
   function loadSearchedCities() {
-    console.log("loadSearchedCities()");
     // Empty the searched cities list
     $(".listSearchedCities").empty();
 
@@ -70,8 +63,6 @@ $("document").ready(function () {
   }
 
   function displayCityInSearchedCities(res) {
-    console.log("displayCityInSearchedCities()");
-    //loadSearchedCities();
     // Empty the city search input
     $("#cityInput").val("");
 
@@ -112,17 +103,16 @@ $("document").ready(function () {
 
   /* --------------- City Current --------------- */
   function displayCityInCurrentWeather(city, cityData) {
-    console.log("displayCityInCurrentWeather()");
-    console.log("City Data: ", cityData);
+    // Variable declarations
     date = new Date(cityData.current.dt * 1000);
     var utc_date = date.toUTCString();
     date = moment.utc(utc_date);
     date = date.format("MMMM Do YYYY");
-
     var icon = `https://openweathermap.org/img/wn/${cityData.current.weather[0].icon}@2x.png`;
     temp = (cityData.current.temp - 273.15).toFixed(1);
     var uv = cityData.current.uvi;
 
+    // Display in the DOM
     $(".currentData .city").text(city);
     $(".currentData .date").text(date);
     $(".currentData .icon").attr("src", icon);
@@ -138,6 +128,7 @@ $("document").ready(function () {
       "Wind speed: " + cityData.current.wind_speed + " mts/s"
     );
 
+    // UV Index traffic light
     if (uv >= 0 && uv <= 2) {
       $(".currentData .uv").text("UV Index: ", uv);
       $(".currentData .flag").text(" Low ");
@@ -166,13 +157,13 @@ $("document").ready(function () {
     }
     $(".currentData").hide();
     $(".currentData").fadeIn(1000);
+
     windyMap(city, cityData);
     displayForcastDay(cityData);
   }
 
   /* --------------- City Forcast --------------- */
   function displayForcastDay(cityData) {
-    console.log("displayForcastDay()");
     cityData = cityData.daily;
     cityData.forEach(function (dayData, index) {
       if (index <= 4) {
@@ -203,6 +194,7 @@ $("document").ready(function () {
           .eq(index)
           .text("WS: " + windSpeed);
 
+        // UV Index traffic light
         if (uv >= 0 && uv <= 2) {
           $(".forecast .uv").eq(index).text("UV: ", uv);
           $(".forecast .flag").eq(index).text(" Low ");
@@ -244,13 +236,12 @@ $("document").ready(function () {
   }
 
   function getCurrentAndForcastData(res) {
-    console.log("getCurrentAndForcastData()");
     if (ajaxFlag === 0) {
       ajaxFlag = 1;
 
       // Current and forecasts weather data
       queryURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${res.coord.lat}&lon=${res.coord.lon}&exclude=hourly&appid=${apiKey}`;
-      console.log("queryURL: ", queryURL);
+      // 2nd Ajax request - to get the full city data
       runAjax(queryURL, getCurrentAndForcastData);
     } else {
       displayCityInSearchedCities(res);
@@ -260,11 +251,9 @@ $("document").ready(function () {
   /* --------------- Windy Map API --------------- */
   let options = {};
   function windyMap(city, cityData) {
+    // Empty the Windy area
     $("#windy").empty();
     $("#windy").removeAttr("class");
-    console.log(
-      "************************* windyMap() *************************"
-    );
     options = {
       // Required: API key
       key: "WINDY_API_KEY_REMOVED",
@@ -282,8 +271,6 @@ $("document").ready(function () {
   }
 
   function windyCallBack(windyAPI) {
-    console.log("windyCallBack()");
-    console.log("windyAPI: ", windyAPI);
     // windyAPI is ready, and contain 'map', 'store',
     // 'picker' and other usefull stuff
 
@@ -299,18 +286,19 @@ $("document").ready(function () {
   /* ************************* Event Listeners ************************* */
   init();
 
+  // Click on the 'Seach Icon' button
   $("#searchBtn").on("click", function (event) {
     event.preventDefault();
     city = $("#cityInput").val();
     ajaxFlag = 0;
 
-    // Call current weather data for one location (to get latitude and longitude)
+    // 1st Ajax request - to get latitude and longitude
     queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`;
     runAjax(queryURL, getCurrentAndForcastData);
   });
 
+  // Click on any of the already searched cities names
   $(".listSearchedCities").on("click", function (event) {
-    // loadSearchedCities();
     citiesSearchedObjectsArray.forEach(function (object) {
       if (object.city === $(event.target).attr("searchedcity")) {
         displayCityInCurrentWeather(object.city, object.data);
