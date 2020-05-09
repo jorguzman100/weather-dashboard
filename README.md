@@ -1,46 +1,69 @@
-# 06 Server-Side APIs: Weather Dashboard
+# 06_Weather_Dashboard
 
-Developers are often tasked with retrieving data from another application's API and using it in the context of their own. Third-party APIs allow developers to access their data and functionality by making requests with specific parameters to a URL. Your challenge is to build a weather dashboard that will run in the browser and feature dynamically updated HTML and CSS.
+A weather dashboard application that allows the user to search for any city and obtain weather information, such as weather description, temperature, humidity, wind speed, UV index and more. \
+Built with HTML, CSS, Bootstrap, JavaScript, jQuery, Moment.js, OpenWeather API, and Windy MAP API.
 
-Use the [OpenWeather API](https://openweathermap.org/api) to retrieve weather data for cities. The documentation includes a section called "How to start" that will provide basic setup and usage instructions. Use `localStorage` to store any persistent data.
+## The Challenge
 
-## User Story
+To create a weather dashboard that will run in the browser and feature dynamically updated HTML and CSS.
 
-```
-AS A traveler
-I WANT to see the weather outlook for multiple cities
-SO THAT I can plan a trip accordingly
-```
+Use the [OpenWeather API](https://openweathermap.org/api) to retrieve weather data for cities.
 
-## Acceptance Criteria
+Main elements:
 
-```
-GIVEN a weather dashboard with form inputs
-WHEN I search for a city
-THEN I am presented with current and future conditions for that city and that city is added to the search history
-WHEN I view current weather conditions for that city
-THEN I am presented with the city name, the date, an icon representation of weather conditions, the temperature, the humidity, the wind speed, and the UV index
-WHEN I view the UV index
-THEN I am presented with a color that indicates whether the conditions are favorable, moderate, or severe
-WHEN I view future weather conditions for that city
-THEN I am presented with a 5-day forecast that displays the date, an icon representation of weather conditions, the temperature, and the humidity
-WHEN I click on a city in the search history
-THEN I am again presented with current and future conditions for that city
-WHEN I open the weather dashboard
-THEN I am presented with the last searched city forecast
-```
+- [x] Cities search functionality.
+- [x] History of cities searched, storaged locally in the browser.
+- [x] Display current weather information.
+- [x] Display forcast information for the next 5 days.
+- [x] Display a Windy Map of the selected city.
 
-The following image demonstrates the application functionality:
+## The development process
 
-![weather dashboard demo](./Assets/06-server-side-apis-homework-demo.png)
+In order to accomplish the challenge, the following steps were executed:
 
-## Review
+1. Define the purpose, and plan the general idea of the application.
+2. Understand the basic functionality of the OpenWeather API.
+3. Research and understand how to retrieve a map with the Windy.com API.
+4. Search for assets (weather dashboards references, icons, etc.)
+5. Define and build the base layout and grid, considering two stages:
+   - Mobile-first approach.
+   - Responsive design for larger screen sizes.
+6. Create search functionality.
+7. Create current weather display functionality.
+8. Create forecast weather display functionality.
+9. Integrate the Windy Map.
+10. Apply semantic HTML.
+11. Asses valid HTML with W3C validator.
+12. Benchmark the site with WebsiteGrader.
+13. Final review and proper documentation.
 
-You are required to submit the following for review:
+## The Output
 
-* The URL of the deployed application.
+With the described process we were able to create a useful, efficient and responsive Weather Dashboard application that display current and 5 days forecast of the selected city.
 
-* The URL of the GitHub repository. Give the repository a unique name and include a README describing the project.
+**The application**
+![](./assets/screenshot.png)
 
-- - -
-© 2019 Trilogy Education Services, a 2U, Inc. brand. All Rights Reserved.
+## Installation
+
+The project was uploaded to [GitHub](https://github.com/) at the following repository:
+[https://github.com/jorguzman100/06_Weather_Dashboard](https://github.com/jorguzman100/06_Weather_Dashboard)
+
+You can access the deployed application with the GitHup Pages link:
+[https://jorguzman100.github.io/06_Weather_Dashboard/](https://jorguzman100.github.io/06_Weather_Dashboard/)
+
+## Tools and other References
+
+[Bootstrap](https://getbootstrap.com/)
+
+[Font Awesome](https://fontawesome.com/)
+
+[Moment.js](https://momentjs.com/)
+
+[OpenWeather](https://openweathermap.org/)
+
+[Windy Map](https://www.windy.com/)
+
+[Website Grader](https://website.grader.com/)
+
+[Markup Validation Service](https://validator.w3.org/)
