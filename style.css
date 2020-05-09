@@ -132,7 +132,9 @@ input {
   display: none !important;
 }
 
-/* // Small devices (landscape phones, 576px and up) */
+/* --------------- Media Queries --------------- */
+
+/* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) {
   .forecast .card-body {
     padding: 15px;
@@ -152,11 +154,11 @@ input {
   }
 }
 
-/* // Medium devices (tablets, 768px and up) */
+/* Medium devices (tablets, 768px and up) */
 @media (min-width: 768px) {
 }
 
-/* // Large devices (desktops, 992px and up) */
+/* Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
   .forecast .card-body .col {
     padding-left: 15px !important;
@@ -174,6 +176,6 @@ input {
   }
 }
 
-/* // Extra large devices (large desktops, 1200px and up) */
+/* Extra large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) {
 }
