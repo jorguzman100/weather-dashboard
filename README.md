@@ -46,11 +46,21 @@ With the described process we were able to create a useful, efficient and respon
 
 ## Installation
 
-The project was uploaded to [GitHub](https://github.com/) at the following repository:
-[https://github.com/jorguzman100/06_Weather_Dashboard](https://github.com/jorguzman100/06_Weather_Dashboard)
+1. Create a local env file:
+   - `cp .env.example .env`
+2. Add your keys in `.env`:
+   - `OPENWEATHER_API_KEY=...`
+   - `WINDY_API_KEY=...`
+3. Start the local server:
+   - `node server.js`
+4. Open:
+   - [http://localhost:8000](http://localhost:8000)
 
-You can access the deployed application with the GitHup Pages link:
-[https://jorguzman100.github.io/06_Weather_Dashboard/](https://jorguzman100.github.io/06_Weather_Dashboard/)
+Notes:
+
+- `.env` is ignored by git and should never be committed.
+- OpenWeather is proxied through `server.js` so the OpenWeather key is not exposed in frontend source.
+- Windy map uses a browser SDK and still needs a client-visible key at runtime.
 
 ## Tools and other References
 

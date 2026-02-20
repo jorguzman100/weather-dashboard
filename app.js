@@ -1,8 +1,8 @@
 $("document").ready(function () {
   /* ************************* Global Variables ************************* */
   var city;
-  const apiKey = "OPENWEATHER_API_KEY_REMOVED";
   let queryURL;
+  let windyApiKey = "";
   let citiesSearchedObject = {};
   let citiesSearchedObjectsArray = [];
   let ajaxFlag = 0;
@@ -10,10 +10,19 @@ $("document").ready(function () {
   /* ************************* Function Declarations ************************* */
   /* --------------- Global --------------- */
   function init() {
-    loadSearchedCities();
+    runAjax(
+      "/api/config",
+      function (response) {
+        windyApiKey = response.windyApiKey || "";
+        loadSearchedCities();
+      },
+      function () {
+        loadSearchedCities();
+      }
+    );
   }
 
-  function runAjax(url, thenFunction) {
+  function runAjax(url, thenFunction, failFunction) {
     $.ajax({
       url: url,
       method: "GET",
@@ -23,7 +32,23 @@ $("document").ready(function () {
       } else {
         return response;
       }
+    }).fail(function (response) {
+      if (failFunction) {
+        failFunction(response);
+      } else {
+        showRequestError(response);
+      }
     });
+  }
+
+  function showRequestError(response) {
+    var errorMessage = "Unable to retrieve weather data.";
+
+    if (response && response.responseJSON && response.responseJSON.error) {
+      errorMessage = response.responseJSON.error;
+    }
+
+    alert(errorMessage);
   }
 
   /* --------------- Search Cities --------------- */
@@ -240,7 +265,7 @@ $("document").ready(function () {
       ajaxFlag = 1;
 
       // Current and forecasts weather data
-      queryURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${res.coord.lat}&lon=${res.coord.lon}&exclude=hourly&appid=${apiKey}`;
+      queryURL = `/api/onecall?lat=${res.coord.lat}&lon=${res.coord.lon}`;
       // 2nd Ajax request - to get the full city data
       runAjax(queryURL, getCurrentAndForcastData);
     } else {
@@ -254,9 +279,15 @@ $("document").ready(function () {
     // Empty the Windy area
     $("#windy").empty();
     $("#windy").removeAttr("class");
+
+    if (!windyApiKey) {
+      $("#windy").text("Windy map unavailable: missing server configuration.");
+      return;
+    }
+
     options = {
       // Required: API key
-      key: "WINDY_API_KEY_REMOVED",
+      key: windyApiKey,
 
       // Put additional console output
       verbose: true,
@@ -293,7 +324,7 @@ $("document").ready(function () {
     ajaxFlag = 0;
 
     // 1st Ajax request - to get latitude and longitude
-    queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`;
+    queryURL = `/api/weather?q=${encodeURIComponent(city)}`;
     runAjax(queryURL, getCurrentAndForcastData);
   });
 
