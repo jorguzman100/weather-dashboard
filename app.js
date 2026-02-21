@@ -3,13 +3,18 @@ $("document").ready(function () {
   var city;
   let queryURL;
   let windyApiKey = "";
-  let citiesSearchedObject = {};
   let citiesSearchedObjectsArray = [];
   let ajaxFlag = 0;
+
+  const THEME_STORAGE_KEY = "aeropulse-theme";
+  const SEARCH_HISTORY_KEY = "searchedCitiesObjects";
+  const MAX_HISTORY_ITEMS = 10;
 
   /* ************************* Function Declarations ************************* */
   /* --------------- Global --------------- */
   function init() {
+    initializeTheme();
+
     runAjax(
       "/api/config",
       function (response) {
@@ -18,6 +23,10 @@ $("document").ready(function () {
       },
       function () {
         loadSearchedCities();
+        showStatusMessage(
+          "Configuration loaded without map key. Weather search still works.",
+          "info"
+        );
       }
     );
   }
@@ -26,100 +35,171 @@ $("document").ready(function () {
     $.ajax({
       url: url,
       method: "GET",
-    }).then(function (response) {
-      if (thenFunction) {
-        thenFunction(response);
-      } else {
-        return response;
-      }
-    }).fail(function (response) {
-      if (failFunction) {
-        failFunction(response);
-      } else {
-        showRequestError(response);
-      }
-    });
+    })
+      .then(function (response) {
+        if (thenFunction) {
+          thenFunction(response);
+        } else {
+          return response;
+        }
+      })
+      .fail(function (response) {
+        if (failFunction) {
+          failFunction(response);
+        } else {
+          showRequestError(response);
+        }
+      });
+  }
+
+  function showStatusMessage(message, type) {
+    const statusMessage = $("#statusMessage");
+    statusMessage.removeClass("is-visible is-error is-success is-info");
+
+    if (!message) {
+      statusMessage.text("");
+      return;
+    }
+
+    statusMessage
+      .addClass("is-visible")
+      .addClass(type ? "is-" + type : "")
+      .text(message);
   }
 
   function showRequestError(response) {
     var errorMessage = "Unable to retrieve weather data.";
 
-    if (response && response.responseJSON && response.responseJSON.error) {
-      errorMessage = response.responseJSON.error;
+    if (response && response.responseJSON) {
+      if (response.responseJSON.error) {
+        errorMessage = response.responseJSON.error;
+      } else if (response.responseJSON.message) {
+        errorMessage = response.responseJSON.message;
+      }
     }
 
-    alert(errorMessage);
+    showStatusMessage(errorMessage, "error");
+  }
+
+  function initializeTheme() {
+    const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+    const systemPrefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+    if (savedTheme === "light" || savedTheme === "dark") {
+      applyTheme(savedTheme);
+    } else {
+      applyTheme(systemPrefersDark ? "dark" : "light");
+    }
+  }
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute("data-theme", theme);
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch (error) {
+      // Ignore storage write failures (private mode / restricted storage)
+    }
+
+    if (theme === "dark") {
+      $(".themeToggleLabel").text("Light Mode");
+    } else {
+      $(".themeToggleLabel").text("Dark Mode");
+    }
   }
 
   /* --------------- Search Cities --------------- */
   function loadSearchedCities() {
-    // Empty the searched cities list
-    $(".listSearchedCities").empty();
+    const savedCities = localStorage.getItem(SEARCH_HISTORY_KEY);
 
-    // Load searched cities from local storage
-    if (localStorage.getItem("searchedCitiesObjects")) {
-      citiesSearchedObjectsArray = localStorage.getItem(
-        "searchedCitiesObjects"
-      );
-      citiesSearchedObjectsArray = JSON.parse(citiesSearchedObjectsArray);
-      // Display searched cities list
-      if (citiesSearchedObjectsArray) {
-        citiesSearchedObjectsArray.forEach(function (object) {
-          var newSearchedCity = $("<a>");
-          newSearchedCity.attr("href", "#");
-          newSearchedCity.attr("searchedCity", object.city);
-          newSearchedCity.attr(
-            "class",
-            "list-group-item list-group-item-action list-group-item-light listItemSearchedCity"
-          );
-          newSearchedCity.text(object.city);
-          $(".listSearchedCities").append(newSearchedCity);
-        });
-        displayCityInCurrentWeather(
-          citiesSearchedObjectsArray[0].city,
-          citiesSearchedObjectsArray[0].data
-        );
+    if (savedCities) {
+      try {
+        citiesSearchedObjectsArray = JSON.parse(savedCities);
+      } catch (error) {
+        citiesSearchedObjectsArray = [];
       }
     } else {
       citiesSearchedObjectsArray = [];
     }
+
+    if (!Array.isArray(citiesSearchedObjectsArray)) {
+      citiesSearchedObjectsArray = [];
+    }
+
+    renderSearchedCities();
+
+    if (citiesSearchedObjectsArray.length > 0) {
+      displayCityInCurrentWeather(
+        citiesSearchedObjectsArray[0].city,
+        citiesSearchedObjectsArray[0].data
+      );
+    }
+  }
+
+  function renderSearchedCities() {
+    // Empty the searched cities list
+    $(".listSearchedCities").empty();
+
+    if (citiesSearchedObjectsArray.length === 0) {
+      $(".listSearchedCities").append(
+        '<p class="historyEmpty">No searches yet. Start with any city.</p>'
+      );
+      return;
+    }
+
+    citiesSearchedObjectsArray.forEach(function (object) {
+      var newSearchedCity = $("<a>");
+      newSearchedCity.attr("href", "#");
+      newSearchedCity.attr("searchedCity", object.city);
+      newSearchedCity.attr(
+        "class",
+        "list-group-item list-group-item-action list-group-item-light listItemSearchedCity"
+      );
+      newSearchedCity.text(object.city);
+      $(".listSearchedCities").append(newSearchedCity);
+    });
+
     $(".listSearchedCities").hide();
-    $(".listSearchedCities").fadeIn(1000);
+    $(".listSearchedCities").fadeIn(260);
   }
 
   function displayCityInSearchedCities(res) {
     // Empty the city search input
     $("#cityInput").val("");
 
+    const normalizedCity = city.toLowerCase();
+
+    // Avoid duplicates while keeping latest selected city at the top
+    citiesSearchedObjectsArray = citiesSearchedObjectsArray.filter(function (
+      object
+    ) {
+      return object.city.toLowerCase() !== normalizedCity;
+    });
+
     // Add city to the searched cities list array and data
-    citiesSearchedObject = {
+    citiesSearchedObjectsArray.unshift({
       city: city,
       data: res,
-    };
+    });
 
-    citiesSearchedObjectsArray.unshift(citiesSearchedObject);
+    citiesSearchedObjectsArray = citiesSearchedObjectsArray.slice(
+      0,
+      MAX_HISTORY_ITEMS
+    );
 
     // Save searched cities array and data to local storage
-    var citiesSearchedObjectsArrayString = JSON.stringify(
-      citiesSearchedObjectsArray
-    );
-    localStorage.setItem(
-      "searchedCitiesObjects",
-      citiesSearchedObjectsArrayString
-    );
+    try {
+      localStorage.setItem(
+        SEARCH_HISTORY_KEY,
+        JSON.stringify(citiesSearchedObjectsArray)
+      );
+    } catch (error) {
+      // Ignore storage write failures and continue rendering latest response.
+    }
 
-    // Append new city element to the searched list
-    var newSearchedCity = $("<a>");
-    newSearchedCity.attr("href", "#");
-    newSearchedCity.attr("searchedCity", city);
-    newSearchedCity.attr(
-      "class",
-      "list-group-item list-group-item-action list-group-item-light listItemSearchedCity"
-    );
-    newSearchedCity.text(city);
-    $(".listSearchedCities").prepend(newSearchedCity);
-    $(".listSearchedCities").hide();
-    $(".listSearchedCities").fadeIn(1000);
+    renderSearchedCities();
+
     displayCityInCurrentWeather(
       citiesSearchedObjectsArray[0].city,
       citiesSearchedObjectsArray[0].data
@@ -127,18 +207,18 @@ $("document").ready(function () {
   }
 
   /* --------------- City Current --------------- */
-  function displayCityInCurrentWeather(city, cityData) {
+  function displayCityInCurrentWeather(selectedCity, cityData) {
     // Variable declarations
-    date = new Date(cityData.current.dt * 1000);
-    var utc_date = date.toUTCString();
-    date = moment.utc(utc_date);
+    var date = new Date(cityData.current.dt * 1000);
+    var utcDate = date.toUTCString();
+    date = moment.utc(utcDate);
     date = date.format("MMMM Do YYYY");
     var icon = `https://openweathermap.org/img/wn/${cityData.current.weather[0].icon}@2x.png`;
-    temp = (cityData.current.temp - 273.15).toFixed(1);
+    var temp = (cityData.current.temp - 273.15).toFixed(1);
     var uv = cityData.current.uvi;
 
     // Display in the DOM
-    $(".currentData .city").text(city);
+    $(".currentData .city").text(selectedCity);
     $(".currentData .date").text(date);
     $(".currentData .icon").attr("src", icon);
     $(".currentData .icon").show();
@@ -155,7 +235,7 @@ $("document").ready(function () {
 
     // UV Index traffic light
     if (uv >= 0 && uv <= 2) {
-      $(".currentData .uv").text("UV Index: ", uv);
+      $(".currentData .uv").text("UV Index: " + uv);
       $(".currentData .flag").text(" Low ");
       $(".currentData .flag").css("background", "#d4edda");
       $(".currentData .flag").css("color", "gray");
@@ -180,22 +260,25 @@ $("document").ready(function () {
       $(".currentData .flag").css("background", "#721c24");
       $(".currentData .flag").css("color", "white");
     }
-    $(".currentData").hide();
-    $(".currentData").fadeIn(1000);
 
-    windyMap(city, cityData);
+    $(".currentData").hide();
+    $(".currentData").fadeIn(350);
+
+    windyMap(selectedCity, cityData);
     displayForcastDay(cityData);
+    showStatusMessage("Live weather updated for " + selectedCity + ".", "success");
   }
 
   /* --------------- City Forcast --------------- */
   function displayForcastDay(cityData) {
     cityData = cityData.daily;
+
     cityData.forEach(function (dayData, index) {
       if (index <= 4) {
         // Handling The Data
-        date = new Date(dayData.dt * 1000);
-        var utc_date = date.toUTCString();
-        date = moment.utc(utc_date);
+        var date = new Date(dayData.dt * 1000);
+        var utcDate = date.toUTCString();
+        date = moment.utc(utcDate);
         date = date.format("MMMM Do YYYY");
         var icon = `https://openweathermap.org/img/wn/${dayData.weather[0].icon}@2x.png`;
         var weather = dayData.weather[0].description;
@@ -221,7 +304,7 @@ $("document").ready(function () {
 
         // UV Index traffic light
         if (uv >= 0 && uv <= 2) {
-          $(".forecast .uv").eq(index).text("UV: ", uv);
+          $(".forecast .uv").eq(index).text("UV: " + uv);
           $(".forecast .flag").eq(index).text(" Low ");
           $(".forecast .flag").eq(index).css("background", "#d4edda");
           $(".forecast .flag").eq(index).css("color", "gray");
@@ -256,8 +339,9 @@ $("document").ready(function () {
         }
       }
     });
+
     $(".forecast").hide();
-    $(".forecast").fadeIn(1000);
+    $(".forecast").fadeIn(350);
   }
 
   function getCurrentAndForcastData(res) {
@@ -275,13 +359,15 @@ $("document").ready(function () {
 
   /* --------------- Windy Map API --------------- */
   let options = {};
-  function windyMap(city, cityData) {
+  function windyMap(selectedCity, cityData) {
     // Empty the Windy area
     $("#windy").empty();
-    $("#windy").removeAttr("class");
+    $("#windy").removeClass("mapFallback");
 
     if (!windyApiKey) {
-      $("#windy").text("Windy map unavailable: missing server configuration.");
+      $("#windy")
+        .addClass("mapFallback")
+        .text("Windy map unavailable: missing server configuration.");
       return;
     }
 
@@ -293,7 +379,7 @@ $("document").ready(function () {
       verbose: true,
 
       // Optional: Initial state of the map
-      city: city,
+      city: selectedCity,
       lat: cityData.lat,
       lon: cityData.lon,
       zoom: 11,
@@ -303,10 +389,8 @@ $("document").ready(function () {
 
   function windyCallBack(windyAPI) {
     // windyAPI is ready, and contain 'map', 'store',
-    // 'picker' and other usefull stuff
-
-    const { map } = windyAPI;
-    // .map is instance of Leaflet map
+    // 'picker' and other useful stuff
+    const map = windyAPI.map;
 
     L.popup()
       .setLatLng([options.lat, options.lon])
@@ -317,23 +401,42 @@ $("document").ready(function () {
   /* ************************* Event Listeners ************************* */
   init();
 
-  // Click on the 'Seach Icon' button
-  $("#searchBtn").on("click", function (event) {
+  $("#themeToggle").on("click", function () {
+    const currentTheme = document.documentElement.getAttribute("data-theme");
+    applyTheme(currentTheme === "dark" ? "light" : "dark");
+  });
+
+  // Submit city search
+  $(".searchForm").on("submit", function (event) {
     event.preventDefault();
-    city = $("#cityInput").val();
+    city = $("#cityInput").val().trim();
+
+    if (!city) {
+      showStatusMessage("Enter a city name to search.", "error");
+      return;
+    }
+
     ajaxFlag = 0;
+    showStatusMessage("Fetching latest weather...", "info");
 
     // 1st Ajax request - to get latitude and longitude
     queryURL = `/api/weather?q=${encodeURIComponent(city)}`;
     runAjax(queryURL, getCurrentAndForcastData);
   });
 
-  // Click on any of the already searched cities names
-  $(".listSearchedCities").on("click", function (event) {
-    citiesSearchedObjectsArray.forEach(function (object) {
-      if (object.city === $(event.target).attr("searchedcity")) {
-        displayCityInCurrentWeather(object.city, object.data);
-      }
-    });
-  });
+  // Click on any of the already searched city names
+  $(".listSearchedCities").on(
+    "click",
+    ".listItemSearchedCity",
+    function (event) {
+      event.preventDefault();
+      const selectedCity = $(this).attr("searchedcity");
+
+      citiesSearchedObjectsArray.forEach(function (object) {
+        if (object.city === selectedCity) {
+          displayCityInCurrentWeather(object.city, object.data);
+        }
+      });
+    }
+  );
 });
