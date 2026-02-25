@@ -2,11 +2,12 @@ const fs = require("fs");
 const http = require("http");
 const path = require("path");
 
-const PORT = Number(process.env.PORT || 8000);
 const ROOT_DIR = __dirname;
+const CLIENT_DIR = path.join(ROOT_DIR, "client");
 
 loadEnvFile(path.join(ROOT_DIR, ".env"));
 
+const PORT = Number(process.env.PORT || 8000);
 const OPENWEATHER_API_KEY = process.env.OPENWEATHER_API_KEY || "";
 const WINDY_API_KEY = process.env.WINDY_API_KEY || "";
 
@@ -20,6 +21,7 @@ const CONTENT_TYPES = {
   ".json": "application/json; charset=utf-8",
   ".png": "image/png",
   ".svg": "image/svg+xml",
+  ".webp": "image/webp",
 };
 
 function loadEnvFile(filePath) {
@@ -70,9 +72,18 @@ function sendText(response, statusCode, payload) {
 function getSafeFilePath(requestPathname) {
   const decodedPath = decodeURIComponent(requestPathname);
   const targetPath = decodedPath === "/" ? "/index.html" : decodedPath;
-  const absolutePath = path.normalize(path.join(ROOT_DIR, targetPath));
+  const absolutePath = path.normalize(path.join(CLIENT_DIR, targetPath));
 
-  if (!absolutePath.startsWith(ROOT_DIR)) {
+  if (absolutePath !== CLIENT_DIR && !absolutePath.startsWith(CLIENT_DIR + path.sep)) {
+    return null;
+  }
+
+  const relativePath = path.relative(CLIENT_DIR, absolutePath);
+  const containsHiddenPath = relativePath
+    .split(path.sep)
+    .some((segment) => segment.startsWith("."));
+
+  if (containsHiddenPath) {
     return null;
   }
 

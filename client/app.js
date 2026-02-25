@@ -1,5 +1,4 @@
 $("document").ready(function () {
-  /* ************************* Global Variables ************************* */
   var city;
   let queryURL;
   let windyApiKey = "";
@@ -10,8 +9,6 @@ $("document").ready(function () {
   const SEARCH_HISTORY_KEY = "searchedCitiesObjects";
   const MAX_HISTORY_ITEMS = 10;
 
-  /* ************************* Function Declarations ************************* */
-  /* --------------- Global --------------- */
   function init() {
     initializeTheme();
 
@@ -109,7 +106,6 @@ $("document").ready(function () {
     }
   }
 
-  /* --------------- Search Cities --------------- */
   function loadSearchedCities() {
     const savedCities = localStorage.getItem(SEARCH_HISTORY_KEY);
 
@@ -138,7 +134,6 @@ $("document").ready(function () {
   }
 
   function renderSearchedCities() {
-    // Empty the searched cities list
     $(".listSearchedCities").empty();
 
     if (citiesSearchedObjectsArray.length === 0) {
@@ -165,19 +160,16 @@ $("document").ready(function () {
   }
 
   function displayCityInSearchedCities(res) {
-    // Empty the city search input
     $("#cityInput").val("");
 
     const normalizedCity = city.toLowerCase();
 
-    // Avoid duplicates while keeping latest selected city at the top
     citiesSearchedObjectsArray = citiesSearchedObjectsArray.filter(function (
       object
     ) {
       return object.city.toLowerCase() !== normalizedCity;
     });
 
-    // Add city to the searched cities list array and data
     citiesSearchedObjectsArray.unshift({
       city: city,
       data: res,
@@ -188,7 +180,6 @@ $("document").ready(function () {
       MAX_HISTORY_ITEMS
     );
 
-    // Save searched cities array and data to local storage
     try {
       localStorage.setItem(
         SEARCH_HISTORY_KEY,
@@ -206,9 +197,7 @@ $("document").ready(function () {
     );
   }
 
-  /* --------------- City Current --------------- */
   function displayCityInCurrentWeather(selectedCity, cityData) {
-    // Variable declarations
     var date = new Date(cityData.current.dt * 1000);
     var utcDate = date.toUTCString();
     date = moment.utc(utcDate);
@@ -217,7 +206,6 @@ $("document").ready(function () {
     var temp = (cityData.current.temp - 273.15).toFixed(1);
     var uv = cityData.current.uvi;
 
-    // Display in the DOM
     $(".currentData .city").text(selectedCity);
     $(".currentData .date").text(date);
     $(".currentData .icon").attr("src", icon);
@@ -233,7 +221,6 @@ $("document").ready(function () {
       "Wind speed: " + cityData.current.wind_speed + " mts/s"
     );
 
-    // UV Index traffic light
     if (uv >= 0 && uv <= 2) {
       $(".currentData .uv").text("UV Index: " + uv);
       $(".currentData .flag").text(" Low ");
@@ -269,13 +256,11 @@ $("document").ready(function () {
     showStatusMessage("Live weather updated for " + selectedCity + ".", "success");
   }
 
-  /* --------------- City Forcast --------------- */
   function displayForcastDay(cityData) {
     cityData = cityData.daily;
 
     cityData.forEach(function (dayData, index) {
       if (index <= 4) {
-        // Handling The Data
         var date = new Date(dayData.dt * 1000);
         var utcDate = date.toUTCString();
         date = moment.utc(utcDate);
@@ -287,7 +272,6 @@ $("document").ready(function () {
         var windSpeed = dayData.wind_speed + " mts/s";
         var uv = dayData.uvi;
 
-        // Display in the DOM
         $(".forecast .date").eq(index).text(date);
         $(".forecast .icon").eq(index).attr("src", icon);
         $(".forecast .icon").eq(index).show();
@@ -302,7 +286,6 @@ $("document").ready(function () {
           .eq(index)
           .text("WS: " + windSpeed);
 
-        // UV Index traffic light
         if (uv >= 0 && uv <= 2) {
           $(".forecast .uv").eq(index).text("UV: " + uv);
           $(".forecast .flag").eq(index).text(" Low ");
@@ -348,19 +331,16 @@ $("document").ready(function () {
     if (ajaxFlag === 0) {
       ajaxFlag = 1;
 
-      // Current and forecasts weather data
+      // Second request gets the full current + forecast payload.
       queryURL = `/api/onecall?lat=${res.coord.lat}&lon=${res.coord.lon}`;
-      // 2nd Ajax request - to get the full city data
       runAjax(queryURL, getCurrentAndForcastData);
     } else {
       displayCityInSearchedCities(res);
     }
   }
 
-  /* --------------- Windy Map API --------------- */
   let options = {};
   function windyMap(selectedCity, cityData) {
-    // Empty the Windy area
     $("#windy").empty();
     $("#windy").removeClass("mapFallback");
 
@@ -372,13 +352,8 @@ $("document").ready(function () {
     }
 
     options = {
-      // Required: API key
       key: windyApiKey,
-
-      // Put additional console output
       verbose: true,
-
-      // Optional: Initial state of the map
       city: selectedCity,
       lat: cityData.lat,
       lon: cityData.lon,
@@ -388,8 +363,6 @@ $("document").ready(function () {
   }
 
   function windyCallBack(windyAPI) {
-    // windyAPI is ready, and contain 'map', 'store',
-    // 'picker' and other useful stuff
     const map = windyAPI.map;
 
     L.popup()
@@ -398,7 +371,6 @@ $("document").ready(function () {
       .openOn(map);
   }
 
-  /* ************************* Event Listeners ************************* */
   init();
 
   $("#themeToggle").on("click", function () {
@@ -406,7 +378,6 @@ $("document").ready(function () {
     applyTheme(currentTheme === "dark" ? "light" : "dark");
   });
 
-  // Submit city search
   $(".searchForm").on("submit", function (event) {
     event.preventDefault();
     city = $("#cityInput").val().trim();
@@ -419,12 +390,10 @@ $("document").ready(function () {
     ajaxFlag = 0;
     showStatusMessage("Fetching latest weather...", "info");
 
-    // 1st Ajax request - to get latitude and longitude
     queryURL = `/api/weather?q=${encodeURIComponent(city)}`;
     runAjax(queryURL, getCurrentAndForcastData);
   });
 
-  // Click on any of the already searched city names
   $(".listSearchedCities").on(
     "click",
     ".listItemSearchedCity",
