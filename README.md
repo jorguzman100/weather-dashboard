@@ -1,6 +1,6 @@
 # 🌤️ AeroPulse Weather Dashboard
 
-### A fast, good-looking weather command center for checking current conditions, a 5-day outlook, and a live Windy map in one place.
+### A weather command center for checking current conditions, a 5-day outlook, and a live Windy map in one place.
 
 AeroPulse is a browser-based weather dashboard with a custom Node server that proxies OpenWeather requests and serves a polished frontend from the same app. It is built to be easy to run locally now and easy to deploy later with environment-based API keys.
 
@@ -89,9 +89,6 @@ PORT=8000
 ```
 
 Notes:
-
-- `.env` is ignored by git and should never be committed.
-- OpenWeather requests are proxied by `server.js`, so the OpenWeather key is not hardcoded in frontend files.
 - Windy uses a browser SDK, so its key is delivered to the client at runtime via `/api/config`.
 </details>
 
