@@ -57,10 +57,9 @@ AeroPulse is a browser-based weather dashboard with a custom Node server that pr
 
 ## 🚀 Live Demo
 
-![Deployment](https://img.shields.io/badge/Deployment-Not%20deployed%20yet-lightgrey?style=for-the-badge)
-[![GitHub](https://img.shields.io/badge/GitHub-Repo-181717?style=for-the-badge&logo=github)](https://github.com/jorguzman100/weather-dashboard)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-AeroPulse-22c55e?style=for-the-badge)](https://weather-dashboard-fqmi.onrender.com/)
 
-No public deployment yet. Local run is fully supported and ready for a later deploy.
+[![Visit Portfolio](https://img.shields.io/badge/Visit%20My%20Portfolio-jorgeguzman.dev-22c55e?style=for-the-badge)](https://portfolio.jorgeguzman.dev/)
 
 ---
 
